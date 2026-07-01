@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLANCK — Criação de Sites &amp; Artes</title>
+<meta name="description" content="Portfólio de criação de sites e artes digitais — BLANCK.inc">
+<meta property="og:title" content="BLANCK — Criação de Sites & Artes">
+<meta property="og:description" content="Portfólio de desenvolvimento web e design gráfico.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%2308080B%22/><text x=%2250%22 y=%2266%22 font-size=%2258%22 fill=%22%237C5CFF%22 font-family=%22sans-serif%22 font-weight=%22700%22 text-anchor=%22middle%22>B</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #08080B;
+    --bg2: #0D0D12;
+    --ink: #F2F2F5;
+    --accent: #8B6BFF;
+    --accent2: #00E5D6;
+    --card: #111116;
+    --muted: #8B8B94;
+    --line: #232329;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; overflow-x:hidden; }
+  html.no-scroll, html.no-scroll body{ overflow:hidden; height:100%; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M4 2 L4 23 L10 18 L14 26 L18 24 L14 16 L21 16 Z' fill='%238B6BFF' stroke='%2308080B' stroke-width='1.5' stroke-linejoin='round'/></svg>") 4 2, auto;
+  }
+  a{ color:inherit; }
+  .disp{ font-family:'Space Grotesk',sans-serif; }
+  .mono{ font-family:'JetBrains Mono',monospace; }
+  ::selection{ background: var(--accent); color:#08080B; }
+
+  /* grid texture BACKGOURND FUNDO */
+  .grid-bg{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background-image:
+      linear-gradient(rgba(139,107,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139,107,255,0.06) 1px, transparent 1px);
+    background-size: 2px 2px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  }
+
+  /* ---------- Scroll progress ---------- */
+  .progress{
+    position:fixed;
+    top:0; left:0;
+    height:3px;
+    width:0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    box-shadow: 0 0 10px var(--accent);
+    z-index:100;
+    transition: width 0.1s linear;
+  }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 16px 4vw;
+    background: rgba(8,8,11,0.7);
+    backdrop-filter: blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:1.15rem;
+    letter-spacing:-0.02em;
+    text-decoration:none;
+  }
+  .brand span{ color:var(--accent2); text-shadow: 0 0 14px rgba(0,229,214,0.6); }
+  nav{ display:flex; align-items:center; gap:6px; }
+  nav a{
+    text-decoration:none;
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--ink);
+    padding:10px 18px;
+    border-radius:999px;
+    transition:background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+  nav a:hover{ background: rgba(139,107,255,0.12); color:var(--accent2); }
+  nav a.cta-nav{
+    background:var(--accent);
+    color:#08080B;
+  }
+  nav a.cta-nav:hover{ background:var(--accent2); box-shadow: 0 0 22px rgba(0,229,214,0.5); color:#08080B; }
+  .burger{
+    display:none;
+    width:42px; height:42px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:transparent;
+    color: var(--ink);
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .burger svg{ display:block; }
+
+  /* ---------- Marquee ---------- */
+  .marquee{
+    background: var(--bg2);
+    color: var(--ink);
+    overflow:hidden;
+    white-space:nowrap;
+    padding: 14px 0;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    z-index:1;
+  }
+  .marquee-track{
+    display:inline-block;
+    animation: scroll 26s linear infinite;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:500;
+    font-size:0.85rem;
+    letter-spacing:0.04em;
+  }
+  .marquee-track span{ margin: 0 28px; color: var(--muted); }
+  .marquee-track span.acc{ color: var(--accent2); text-shadow: 0 0 10px rgba(0,229,214,0.5); }
+  @keyframes scroll{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding: 11vh 4vw 9vh;
+    position:relative;
+    z-index:1;
+  }
+  .hero .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.8rem;
+    color: var(--accent2);
+    letter-spacing:0.12em;
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .hero .eyebrow::before{
+    content:"";
+    width:8px; height:8px;
+    border-radius:50%;
+    background: var(--accent2);
+    box-shadow: 0 0 10px var(--accent2);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.4; transform:scale(0.7); }
+  }
+  .hero h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size: clamp(2.6rem, 8vw, 6.2rem);
+    line-height: 0.98;
+    letter-spacing:-0.03em;
+    margin: 0 0 32px;
+    position:relative;
+  }
+  .hero h1 .line2{
+    display:block;
+    color: var(--accent);
+  }
+  .glitch{
+    position:relative;
+    display:inline-block;
+  }
+  .glitch:hover{ animation: glitch 0.4s steps(2) 2; }
+  @keyframes glitch{
+    0%{ text-shadow: -2px 0 var(--accent2), 2px 0 var(--accent); }
+    25%{ text-shadow: 2px 0 var(--accent2), -2px 0 var(--accent); }
+    50%{ text-shadow: -2px 1px var(--accent2), 2px -1px var(--accent); }
+    100%{ text-shadow: none; }
+  }
+  .hero-sub{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:24px;
+    max-width: 1200px;
+    position:relative;
+  }
+  .hero-sub p{
+    max-width:42ch;
+    font-size:1.05rem;
+    line-height:1.6;
+    color: var(--muted);
+    margin:0;
+  }
+  .hero-tags{ display:flex; gap:10px; flex-wrap:wrap; }
+  .hero-tags span{
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:7px 16px;
+    font-size:0.8rem;
+    font-weight:600;
+    color: var(--muted);
+    background: var(--bg2);
+  }
+
+  /* ---------- Section ---------- */
+  .section{ padding: 8vh 4vw; border-top:1px solid var(--line); position:relative; z-index:1; }
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:40px;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .section-head h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    letter-spacing:-0.02em;
+    margin:0;
+  }
+  .section-head .count{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.8rem;
+    font-weight:500;
+    color: var(--accent2);
+  }
+
+  /* ---------- Bento grid ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+    perspective: 1200px;
+  }
+  .card{
+    grid-column: span 3;
+    background: var(--card);
+    border-radius: 18px;
+    overflow:hidden;
+    text-decoration:none;
+    color:inherit;
+    display:flex;
+    flex-direction:column;
+    border:1px solid var(--line);
+    position:relative;
+    opacity:0;
+    transform: translateY(24px);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    will-change: transform;
+  }
+  .card.in-view{ animation: rise 0.6s ease forwards; }
+  @keyframes rise{ to{ opacity:1; transform: translateY(0); } }
+  .card:hover{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(139,107,255,0.4), 0 30px 60px -25px rgba(139,107,255,0.35);
+  }
+  .card.wide{ grid-column: span 2; }
+  .card.narrow{ grid-column: span 2; }
+  .card.full{ grid-column: span 4; }
+  .card.full .thumb{ aspect-ratio: 21/9; }
+  .card .thumb{
+    position:relative;
+    aspect-ratio: 16/11;
+    overflow:hidden;
+    background: linear-gradient(135deg,#16161C,#0D0D12);
+  }
+  .card .thumb::after{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, transparent 40%, rgba(8,8,11,0.55));
+    pointer-events:none;
+  }
+  .card .thumb img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition: transform 0.5s ease, opacity 0.4s ease;
+    opacity:0;
+  }
+  .card .thumb img.loaded{ opacity:0.92; }
+  .card:hover .thumb img{ transform: scale(1.07); opacity:1; }
+  .card .arrow{
+    position:absolute;
+    top:16px; right:16px;
+    width:40px; height:40px;
+    border-radius:50%;
+    background: rgba(8,8,11,0.6);
+    border:1px solid var(--line);
+    backdrop-filter: blur(6px);
+    display:flex; align-items:center; justify-content:center;
+    transform: rotate(-45deg) scale(0.85);
+    opacity:0;
+    transition: all 0.3s ease;
+    color: var(--ink);
+    z-index:2;
+  }
+  .card:hover .arrow{ opacity:1; transform: rotate(0deg) scale(1); background:var(--accent2); border-color:var(--accent2); color:#08080B; box-shadow: 0 0 16px rgba(0,229,214,0.6); }
+  .card .tag{
+    position:absolute;
+    top:16px; left:16px;
+    background: rgba(8,8,11,0.65);
+    border:1px solid var(--line);
+    backdrop-filter: blur(6px);
+    color: var(--accent2);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.65rem;
+    font-weight:500;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding: 6px 12px;
+    border-radius:999px;
+    z-index:2;
+  }
+  .card .body{
+    padding: 20px 22px 24px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .card h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:1.2rem;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .card p{
+    margin:0;
+    font-size:0.9rem;
+    color:var(--muted);
+    line-height:1.5;
+  }
+
+  @media (max-width: 900px){
+    .card, .card.wide, .card.narrow, .card.full{ grid-column: span 6; }
+  }
+
+  @media (max-width: 720px){
+    nav{
+      position:fixed;
+      inset:0;
+      z-index:300;
+      height:100dvh;
+      width:100%;
+      background: var(--bg2);
+      flex-direction:column;
+      align-items:stretch;
+      justify-content:center;
+      gap:10px;
+      padding: 24px 8vw;
+      opacity:0;
+      visibility:hidden;
+      transform: translateY(-12px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    }
+    nav.open{ opacity:1; visibility:visible; transform: translateY(0); }
+    nav a{ text-align:center; padding:16px; font-size:1.3rem; }
+    nav a.cta-nav{ margin-top:14px; }
+    .burger{ display:flex; position:relative; z-index:301; }
+  }
+
+  /* ---------- Contact ---------- */
+  .contact{
+    padding: 13vh 4vw;
+    text-align:center;
+    border-top:1px solid var(--line);
+    position:relative;
+    z-index:1;
+  }
+  .contact h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size: clamp(2rem, 6vw, 4rem);
+    letter-spacing:-0.02em;
+    max-width: 18ch;
+    margin: 0 auto 32px;
+  }
+  .magnetic-wrap{ display:inline-block; }
+  .contact a.cta{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding: 18px 38px;
+    background: var(--accent);
+    color:#08080B;
+    text-decoration:none;
+    font-weight:700;
+    font-size:0.95rem;
+    border-radius:999px;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 0 0 rgba(139,107,255,0);
+  }
+  .contact a.cta:hover{ background: var(--accent2); box-shadow: 0 0 30px rgba(0,229,214,0.5); }
+
+  footer{
+    padding: 22px 4vw;
+    font-size:0.78rem;
+    color:var(--muted);
+    text-align:center;
+    border-top:1px solid var(--line);
+    position:relative;
+    z-index:1;
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="progress" id="progress"></div>
+
+<header>
+  <a href="#" class="brand">BLANCK<span>.inc</span></a>
+  <nav id="nav">
+    <a href="#sites">Sites</a>
+    <a href="#artes">Artes</a>
+    <a href="#contato" class="cta-nav">Contato</a>
+  </nav>
+  <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false">
+    <svg id="burgerIconOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <svg id="burgerIconClose" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="display:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</header>
+
+<div class="marquee">
+  <div class="marquee-track" id="marquee-track"></div>
+</div>
+
+
+<section class="hero">
+  <div class="eyebrow mono">DISPONÍVEL PARA NOVOS PROJETOS</div>
+  <h1><span class="glitch">Criação de sites</span><span class="line2">e identidade visual.</span></h1>
+  <div class="hero-sub">
+    <p>Projetos de desenvolvimento web e design gráfico feitos sob medida — do wireframe à publicação. Clique em qualquer card para ver o trabalho completo.</p>
+  </div>
+</section>
+
+
+<section class="section" id="sites">
+  <div class="section-head">
+    <h2 class="disp">Sites</h2>
+    <span class="count mono" id="count-sites"></span>
+  </div>
+  <div class="grid" id="grid-sites"></div>
+</section>
+
+<section class="section" id="artes">
+  <div class="section-head">
+    <h2 class="disp">Artes &amp; Design</h2>
+    <span class="count mono" id="count-artes"></span>
+  </div>
+  <div class="grid" id="grid-artes"></div>
+</section>
+
+<section class="contact" id="contato">
+  <h2 class="disp">Vamos criar o<br>próximo projeto?</h2>
+  <span class="magnetic-wrap">
+    <a class="cta" href="mailto:seuemail@exemplo.com" id="magneticBtn">
+      Fale comigo
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </span>
+</section>
+
+<footer>© BLANCK.inc</footer>
+
+<script>
+
+  const projetosSites = [
+    { title:"Dk Tatto Studio", description:"Site para estúdio de tatuagem com portfólio de trabalhos e contato para agendamento.", image:"img/dktatoo.png", link:"https://macedocedo.github.io/DkTatto/", size:"full" },
+    { title:"LH Services — Automação e Sistemas", description:"Site institucional para empresa de automação industrial e sistemas.", image:"img/lhservices.png", link:"https://macedocedo.github.io/LH-Services-Automao-e-Sistemas/", size:"narrow" },
+    { title:"Alessandro Martins — Psicólogo", description:"Portfólio profissional para atendimento psicológico com apresentação e contato.", image:"img/alessandro.png", link:"https://macedocedo.github.io/Portfolio-Alessandro-Martins/", size:"narrow" },
+    { title:"Aulas de Skate — Mateus Macedo", description:"Página de divulgação de aulas particulares de skate.", image:"img/skate.png", link:"https://macedocedo.github.io/Skate-manobras/", size:"full" },
+    { title:"Adoção de Animais", description:"Plataforma para divulgar cães e gatos disponíveis para adoção.", image:"img/Dogadote.png", link:"https://macedocedo.github.io/CachorroChorro/", size:"full" },
+    { title:"Flag TI — Infraestrutura", description:"Site institucional para empresa de infraestrutura e serviços de TI.", image:"img/flagti.png", link:"https://macedocedo.github.io/FlagTi/", size:"narrow" }
+  ];
+
+  const projetosArtes = [
+    { title:"Identidade Nordeste Co.", description:"Logotipo e paleta de marca para torrefação.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/nordeste-co", size:"wide" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/mares", size:"wide" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/mares", size:"wide" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/mares", size:"wide" },
+    { title:"Post Series — Verão", description:"Conjunto de artes para redes sociais.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/verao-series", size:"full" }
+  ];
+
+  function renderGrid(containerId, countId, items, tagLabel){
+    const grid = document.getElementById(containerId);
+    const count = document.getElementById(countId);
+    count.textContent = "// " + items.length + (items.length === 1 ? " projeto" : " projetos");
+    grid.innerHTML = items.map(item => `
+      <a class="card ${item.size || ''}" href="${item.link}" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <span class="tag">${tagLabel}</span>
+          <div class="arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </div>
+          <img src="${item.image}" alt="${item.title}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.closest('.thumb').style.background='linear-gradient(135deg,#16161C,#0D0D12)'">
+        </div>
+        <div class="body">
+          <h3>${item.title}</h3>
+          <p>${item.description}</p>
+        </div>
+      </a>
+    `).join("");
+  }
+
+  renderGrid("grid-sites", "count-sites", projetosSites, "Site");
+  renderGrid("grid-artes", "count-artes", projetosArtes, "Arte");
+
+  // Marquee ticker
+  const services = ["CRIAÇÃO DE SITES","IDENTIDADE VISUAL","UI/UX DESIGN","BRANDING","ARTES DIGITAIS","LANDING PAGES"];
+  const track = document.getElementById('marquee-track');
+  const build = () => services.map((s,i) => `<span class="${i % 2 === 0 ? 'acc' : ''}">${s}</span>`).join("//");
+  track.innerHTML = build() + "//" + build();
+
+  // Scroll progress bar
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = scrolled + "%";
+  });
+
+  // Mobile nav toggle
+  const burger = document.getElementById('burger');
+  const nav = document.getElementById('nav');
+  const iconOpen = document.getElementById('burgerIconOpen');
+  const iconClose = document.getElementById('burgerIconClose');
+
+  function setNavOpen(open){
+    nav.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    iconOpen.style.display = open ? 'none' : 'block';
+    iconClose.style.display = open ? 'block' : 'none';
+    document.documentElement.classList.toggle('no-scroll', open);
+  }
+
+  burger.addEventListener('click', () => setNavOpen(!nav.classList.contains('open')));
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
+  window.addEventListener('keydown', (e) => { if(e.key === 'Escape') setNavOpen(false); });
+  window.addEventListener('resize', () => { if(window.innerWidth > 720) setNavOpen(false); });
+
+  // Reveal cards on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('in-view');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.card').forEach(c => io.observe(c));
+
+  // ---------- Magnetic button + 3D tilt (skipped on touch devices) ----------
+  const isTouch = window.matchMedia('(hover: none)').matches;
+  if(!isTouch){
+    // Magnetic button
+    const magBtn = document.getElementById('magneticBtn');
+    const magWrap = magBtn.parentElement;
+    magWrap.addEventListener('mousemove', (e) => {
+      const rect = magBtn.getBoundingClientRect();
+      const relX = e.clientX - rect.left - rect.width/2;
+      const relY = e.clientY - rect.top - rect.height/2;
+      magBtn.style.transform = `translate(${relX * 0.25}px, ${relY * 0.25}px)`;
+    });
+    magWrap.addEventListener('mouseleave', () => {
+      magBtn.style.transform = 'translate(0,0)';
+    });
+
+    // 3D tilt on cards
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `translateY(-6px) rotateX(${py * -6}deg) rotateY(${px * 8}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
