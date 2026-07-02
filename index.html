@@ -510,7 +510,7 @@
   function renderGrid(containerId, countId, items, tagLabel){
     const grid = document.getElementById(containerId);
     const count = document.getElementById(countId);
-    count.textContent = "// " + items.length + (items.length === 1 ? " projeto" : " projetos");
+    count.textContent = "" + items.length + (items.length === 1 ? " projeto" : " projetos");
     grid.innerHTML = items.map(item => `
       <a class="card ${item.size || ''}" href="${item.link}" target="_blank" rel="noopener noreferrer">
         <div class="thumb skeleton">
