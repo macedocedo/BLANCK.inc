@@ -48,7 +48,7 @@
     background-image:
       linear-gradient(rgba(139,107,255,0.06) 1px, transparent 1px),
       linear-gradient(90deg, rgba(139,107,255,0.06) 1px, transparent 1px);
-    background-size: 2px 2px;
+    background-size: 48px 48px;
     -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
             mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
   }
@@ -275,13 +275,22 @@
   }
   .card.wide{ grid-column: span 2; }
   .card.narrow{ grid-column: span 2; }
-  .card.full{ grid-column: span 4; }
+  .card.full{ grid-column: span 6; }
   .card.full .thumb{ aspect-ratio: 21/9; }
   .card .thumb{
     position:relative;
     aspect-ratio: 16/11;
     overflow:hidden;
     background: linear-gradient(135deg,#16161C,#0D0D12);
+  }
+  .card .thumb.skeleton{
+    background: linear-gradient(100deg, #121218 30%, #1B1B22 50%, #121218 70%);
+    background-size: 220% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  @keyframes shimmer{
+    0%{ background-position: 120% 0; }
+    100%{ background-position: -20% 0; }
   }
   .card .thumb::after{
     content:"";
@@ -482,21 +491,20 @@
 
 <script>
 
+
   const projetosSites = [
-    { title:"Dk Tatto Studio", description:"Site para estúdio de tatuagem com portfólio de trabalhos e contato para agendamento.", image:"dktatoo.png", link:"https://macedocedo.github.io/DkTatto/", size:"full" },
-    { title:"LH Services — Automação e Sistemas", description:"Site institucional para empresa de automação industrial e sistemas.", image:"lhservices.png", link:"https://macedocedo.github.io/LH-Services-Automao-e-Sistemas/", size:"narrow" },
-    { title:"Alessandro Martins — Psicólogo", description:"Portfólio profissional para atendimento psicológico com apresentação e contato.", image:"alessandro.png", link:"https://macedocedo.github.io/Portfolio-Alessandro-Martins/", size:"narrow" },
-    { title:"Aulas de Skate — Mateus Macedo", description:"Página de divulgação de aulas particulares de skate.", image:"skate.png", link:"https://macedocedo.github.io/Skate-manobras/", size:"full" },
-    { title:"Adoção de Animais", description:"Plataforma para divulgar cães e gatos disponíveis para adoção.", image:"dogadote.png", link:"https://macedocedo.github.io/CachorroChorro/", size:"full" },
-    { title:"Flag TI — Infraestrutura", description:"Site institucional para empresa de infraestrutura e serviços de TI.", image:"flagti.png", link:"https://macedocedo.github.io/FlagTi/", size:"narrow" }
+    { title:"Dk Tatto Studio", description:"Site para estúdio de tatuagem com portfólio de trabalhos e contato para agendamento.", image:"./img/dktatoo.png", link:"https://macedocedo.github.io/DkTatto/", size:"narrow" },
+    { title:"LH Services — Automação e Sistemas", description:"Site institucional para empresa de automação industrial e sistemas.", image:"./img/lhservices.png", link:"https://macedocedo.github.io/LH-Services-Automao-e-Sistemas/", size:"narrow" },
+    { title:"Alessandro Martins — Psicólogo", description:"Portfólio profissional para atendimento psicológico com apresentação e contato.", image:"./img/alessandro.png", link:"https://macedocedo.github.io/Portfolio-Alessandro-Martins/", size:"narrow" },
+    { title:"Aulas de Skate — Mateus Macedo", description:"Página de divulgação de aulas particulares de skate.", image:"./img/skate.png", link:"https://macedocedo.github.io/Skate-manobras/", size:"narrow" },
+    { title:"Adoção de Animais", description:"Plataforma para divulgar cães e gatos disponíveis para adoção.", image:"./img/dogadote.png", link:"https://macedocedo.github.io/CachorroChorro/", size:"narrow" },
+    { title:"Flag TI — Infraestrutura", description:"Site institucional para empresa de infraestrutura e serviços de TI.", image:"./img/flagti.png", link:"https://macedocedo.github.io/FlagTi/", size:"narrow" }
   ];
 
   const projetosArtes = [
-    { title:"Identidade Nordeste Co.", description:"Logotipo e paleta de marca para torrefação.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/nordeste-co", size:"wide" },
-    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/mares", size:"wide" },
-    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/mares", size:"wide" },
-    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/mares", size:"wide" },
-    { title:"Post Series — Verão", description:"Conjunto de artes para redes sociais.", image:"https://placehold.co/900x620/16161C/8B8B94?text=Arte", link:"https://exemplo.com/verao-series", size:"full" }
+    { title:"Identidade Nordeste Co.", description:"Logotipo e paleta de marca para torrefação.", image:"./img/nordeste.png", link:"https://exemplo.com/nordeste-co", size:"wide" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/mares.png", link:"https://exemplo.com/mares", size:"wide" },
+    { title:"Post Series — Verão", description:"Conjunto de artes para redes sociais.", image:"img/verao.png", link:"https://exemplo.com/verao-series", size:"full" }
   ];
 
   function renderGrid(containerId, countId, items, tagLabel){
@@ -505,12 +513,14 @@
     count.textContent = "// " + items.length + (items.length === 1 ? " projeto" : " projetos");
     grid.innerHTML = items.map(item => `
       <a class="card ${item.size || ''}" href="${item.link}" target="_blank" rel="noopener noreferrer">
-        <div class="thumb">
+        <div class="thumb skeleton">
           <span class="tag">${tagLabel}</span>
           <div class="arrow">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M7 7h10v10"/></svg>
           </div>
-          <img src="${item.image}" alt="${item.title}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.closest('.thumb').style.background='linear-gradient(135deg,#16161C,#0D0D12)'">
+          <img src="${item.image}" alt="${item.title}" loading="lazy"
+               onload="this.classList.add('loaded'); this.closest('.thumb').classList.remove('skeleton')"
+               onerror="this.closest('.thumb').classList.remove('skeleton'); this.closest('.thumb').style.background='linear-gradient(135deg,#16161C,#0D0D12)'; this.style.display='none'">
         </div>
         <div class="body">
           <h3>${item.title}</h3>
