@@ -537,7 +537,7 @@
   const services = ["CRIAÇÃO DE SITES","IDENTIDADE VISUAL","UI/UX DESIGN","BRANDING","ARTES DIGITAIS","LANDING PAGES"];
   const track = document.getElementById('marquee-track');
   const build = () => services.map((s,i) => `<span class="${i % 2 === 0 ? 'acc' : ''}">${s}</span>`).join("//");
-  track.innerHTML = build() + "//" + build();
+  track.innerHTML = build() + "" + build();
 
   // Scroll progress bar
   const progress = document.getElementById('progress');
