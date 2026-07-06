@@ -274,6 +274,7 @@
     transform: translateY(24px);
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
     will-change: transform;
+    cursor:pointer;
   }
   .card.in-view{ animation: rise 0.6s ease forwards; }
   @keyframes rise{ to{ opacity:1; transform: translateY(0); } }
@@ -329,6 +330,7 @@
     z-index:2;
   }
   .card:hover .arrow{ opacity:1; transform: rotate(0deg) scale(1); background:var(--accent2); border-color:var(--accent2); color:#08080B; box-shadow: 0 0 16px rgba(0,229,214,0.6); }
+  .card .arrow.expand-icon svg{ transform: rotate(45deg); }
   .card .tag{
     position:absolute;
     top:16px; left:16px;
@@ -445,6 +447,137 @@ a, button, .card, .burger, nav a {
   -webkit-tap-highlight-color: transparent;
 }
 
+  /* ---------- Lightbox (popup para Artes) ---------- */
+  .lightbox{
+    position:fixed;
+    inset:0;
+    z-index:400;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: rgba(8,8,11,0.86);
+    backdrop-filter: blur(10px);
+    opacity:0;
+    visibility:hidden;
+    transition: opacity 0.3s ease, visibility 0.3s;
+    padding: 6vh 6vw;
+  }
+  .lightbox.open{ opacity:1; visibility:visible; }
+  .lightbox-content{
+    position:relative;
+    max-width: min(1000px, 90vw);
+    max-height: 88vh;
+    width:100%;
+    background: var(--card);
+    border:1px solid var(--line);
+    border-radius: 20px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transform: scale(0.94) translateY(16px);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1);
+  }
+  .lightbox.open .lightbox-content{ transform: scale(1) translateY(0); }
+  .lightbox-img-wrap{
+    position:relative;
+    width:100%;
+    max-height: 68vh;
+    background: #000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .lightbox-img-wrap img{
+    width:100%;
+    height:100%;
+    max-height:68vh;
+    object-fit:contain;
+    display:block;
+    background: #000;
+  }
+  .lightbox-info{
+    padding: 20px 26px 26px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .lightbox-info .lb-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color: var(--accent2);
+  }
+  .lightbox-info h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:1.3rem;
+    margin:2px 0 0;
+    letter-spacing:-0.01em;
+  }
+  .lightbox-info p{
+    margin:0;
+    font-size:0.92rem;
+    color: var(--muted);
+    line-height:1.5;
+  }
+  .lightbox-close{
+    position:absolute;
+    top:16px; right:16px;
+    width:40px; height:40px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background: rgba(8,8,11,0.6);
+    backdrop-filter: blur(6px);
+    color: var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    z-index:2;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .lightbox-close:hover{ background: var(--accent2); border-color: var(--accent2); color:#08080B; }
+  .lightbox-nav{
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
+    width:46px; height:46px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background: rgba(8,8,11,0.6);
+    backdrop-filter: blur(6px);
+    color: var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    z-index:2;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .lightbox-nav:hover{ background: var(--accent); border-color: var(--accent); color:#08080B; }
+  .lightbox-nav.prev{ left: 2vw; }
+  .lightbox-nav.next{ right: 2vw; }
+  .lightbox-counter{
+    position:absolute;
+    top:16px; left:16px;
+    background: rgba(8,8,11,0.65);
+    border:1px solid var(--line);
+    backdrop-filter: blur(6px);
+    color: var(--accent2);
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.7rem;
+    padding: 6px 12px;
+    border-radius:999px;
+    z-index:2;
+  }
+
+  @media (max-width: 720px){
+    .lightbox{ padding: 4vh 4vw; }
+    .lightbox-nav{ width:38px; height:38px; }
+    .lightbox-nav.prev{ left: 8px; }
+    .lightbox-nav.next{ right: 8px; }
+    .lightbox-img-wrap{ max-height:50vh; }
+    .lightbox-img-wrap img{ max-height:50vh; }
+  }
+
 </style>
 </head>
 <body>
@@ -511,6 +644,30 @@ a, button, .card, .burger, nav a {
 
 <footer>© BLANCK.inc</footer>
 
+<!-- Lightbox / popup para os cards de Artes -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="lightbox-content">
+    <div class="lightbox-img-wrap">
+      <span class="lightbox-counter" id="lightboxCounter"></span>
+      <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <button class="lightbox-nav prev" id="lightboxPrev" aria-label="Anterior">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <img id="lightboxImg" src="" alt="">
+      <button class="lightbox-nav next" id="lightboxNext" aria-label="Próximo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+    <div class="lightbox-info">
+      <span class="lb-tag mono" id="lightboxTag"></span>
+      <h3 id="lightboxTitle"></h3>
+      <p id="lightboxDesc"></p>
+    </div>
+  </div>
+</div>
+
 <script>
 
 
@@ -524,21 +681,41 @@ a, button, .card, .burger, nav a {
   ];
 
   const projetosArtes = [
-    { title:"Identidade Nordeste Co.", description:"Logotipo e paleta de marca para torrefação.", image:"./img/nordeste.png", link:"https://exemplo.com/nordeste-co", size:"wide" },
-    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/mares.png", link:"https://exemplo.com/mares", size:"wide" },
-    { title:"Post Series — Verão", description:"Conjunto de artes para redes sociais.", image:"img/verao.png", link:"https://exemplo.com/verao-series", size:"full" }
+    { title:"Identidade Nordeste Co.", description:"Logotipo e paleta de marca para torrefação.", image:"./img/art1.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art4.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art6.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art12.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art8.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art5.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art7.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art9.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art3.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art2.jpeg", link:"", size:"narrow" },
+    { title:"Capa Álbum — Marés", description:"Arte de capa para lançamento musical independente.", image:"./img/art11.jpeg", link:"", size:"narrow" },
+    { title:"Post Series — Verão", description:"Conjunto de artes para redes sociais.", image:"./img/logo.jpeg", link:"", size:"narrow" }
   ];
 
-  function renderGrid(containerId, countId, items, tagLabel){
+  function renderGrid(containerId, countId, items, tagLabel, options){
+    options = options || {};
+    const popup = !!options.popup;
     const grid = document.getElementById(containerId);
     const count = document.getElementById(countId);
     count.textContent = "" + items.length + (items.length === 1 ? " projeto" : " projetos");
-    grid.innerHTML = items.map(item => `
-      <a class="card ${item.size || ''}" href="${item.link}" target="_blank" rel="noopener noreferrer">
+
+    grid.innerHTML = items.map((item, index) => {
+      const tagName = popup ? 'div' : 'a';
+      const attrs = popup
+        ? `data-index="${index}" role="button" tabindex="0"`
+        : `href="${item.link}" target="_blank" rel="noopener noreferrer"`;
+      const arrowIcon = popup
+        ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>`
+        : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M7 7h10v10"/></svg>`;
+      return `
+      <${tagName} class="card ${item.size || ''}" ${attrs}>
         <div class="thumb skeleton">
           <span class="tag">${tagLabel}</span>
-          <div class="arrow">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          <div class="arrow ${popup ? 'expand-icon' : ''}">
+            ${arrowIcon}
           </div>
           <img src="${item.image}" alt="${item.title}" loading="lazy"
                onload="this.classList.add('loaded'); this.closest('.thumb').classList.remove('skeleton')"
@@ -548,12 +725,88 @@ a, button, .card, .burger, nav a {
           <h3>${item.title}</h3>
           <p>${item.description}</p>
         </div>
-      </a>
-    `).join("");
+      </${tagName}>
+    `;
+    }).join("");
+
+    if(popup){
+      const cards = grid.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('click', () => openLightbox(items, tagLabel, parseInt(card.dataset.index, 10)));
+        card.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            openLightbox(items, tagLabel, parseInt(card.dataset.index, 10));
+          }
+        });
+      });
+    }
   }
 
   renderGrid("grid-sites", "count-sites", projetosSites, "Site");
-  renderGrid("grid-artes", "count-artes", projetosArtes, "Arte");
+  renderGrid("grid-artes", "count-artes", projetosArtes, "Arte", { popup: true });
+
+  // ---------- Lightbox (popup de Artes) ----------
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxTitle = document.getElementById('lightboxTitle');
+  const lightboxDesc = document.getElementById('lightboxDesc');
+  const lightboxTag = document.getElementById('lightboxTag');
+  const lightboxCounter = document.getElementById('lightboxCounter');
+  const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+
+  let lbItems = [];
+  let lbTag = "";
+  let lbIndex = 0;
+
+  function openLightbox(items, tagLabel, index){
+    lbItems = items;
+    lbTag = tagLabel;
+    lbIndex = index;
+    updateLightbox();
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.documentElement.classList.add('no-scroll');
+  }
+
+  function updateLightbox(){
+    const item = lbItems[lbIndex];
+    lightboxImg.src = item.image;
+    lightboxImg.alt = item.title;
+    lightboxTitle.textContent = item.title;
+    lightboxDesc.textContent = item.description;
+    lightboxTag.textContent = lbTag;
+    lightboxCounter.textContent = (lbIndex + 1) + " / " + lbItems.length;
+  }
+
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.documentElement.classList.remove('no-scroll');
+  }
+
+  function showPrev(){
+    lbIndex = (lbIndex - 1 + lbItems.length) % lbItems.length;
+    updateLightbox();
+  }
+  function showNext(){
+    lbIndex = (lbIndex + 1) % lbItems.length;
+    updateLightbox();
+  }
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); showPrev(); });
+  lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); showNext(); });
+  lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
+
+  window.addEventListener('keydown', (e) => {
+    if(!lightbox.classList.contains('open')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') showPrev();
+    if(e.key === 'ArrowRight') showNext();
+  });
 
   // Scroll progress bar
   const progress = document.getElementById('progress');
