@@ -123,6 +123,53 @@
   }
   .burger svg{ display:block; }
 
+  /* ---------- Logo glitch ---------- */
+  .logo-glitch{
+    position:relative;
+    display:inline-block;
+    height:32px;
+  }
+  .logo-glitch img{
+    height:32px;
+    width:auto;
+    display:block;
+  }
+  .logo-glitch .logo-glitch-layer{
+    position:absolute;
+    top:0; left:0;
+    pointer-events:none;
+    opacity:0;
+    mix-blend-mode:screen;
+  }
+  .logo-glitch:hover .layer-1,
+  .logo-glitch.is-glitching .layer-1{
+    opacity:0.85;
+    filter:saturate(4) hue-rotate(-30deg);
+    animation: glitchLayer1 0.35s steps(2) infinite;
+  }
+  .logo-glitch:hover .layer-2,
+  .logo-glitch.is-glitching .layer-2{
+    opacity:0.85;
+    filter:saturate(4) hue-rotate(160deg);
+    animation: glitchLayer2 0.35s steps(2) infinite;
+  }
+  @keyframes glitchLayer1{
+    0%  { transform:translate(0,0);      clip-path:inset(0 0 0 0); }
+    20% { transform:translate(-3px,1px); clip-path:inset(10% 0 40% 0); }
+    40% { transform:translate(2px,-1px); clip-path:inset(50% 0 10% 0); }
+    60% { transform:translate(-2px,2px); clip-path:inset(20% 0 60% 0); }
+    80% { transform:translate(3px,-2px); clip-path:inset(70% 0 5% 0); }
+    100%{ transform:translate(0,0);      clip-path:inset(0 0 0 0); }
+  }
+  @keyframes glitchLayer2{
+    0%  { transform:translate(0,0);      clip-path:inset(0 0 0 0); }
+    20% { transform:translate(3px,-1px); clip-path:inset(60% 0 10% 0); }
+    40% { transform:translate(-2px,1px); clip-path:inset(5% 0 70% 0); }
+    60% { transform:translate(2px,-2px); clip-path:inset(35% 0 30% 0); }
+    80% { transform:translate(-3px,2px); clip-path:inset(15% 0 50% 0); }
+    100%{ transform:translate(0,0);      clip-path:inset(0 0 0 0); }
+  }
+
 
   /* ---------- Hero ---------- */
   .hero{
@@ -214,14 +261,33 @@
       opacity:0.95;
       pointer-events:none;
       z-index:0;
-      filter: drop-shadow(0 0 40px rgba(139,107,255,0.25));
-      animation: spinLogo 12s linear infinite;
       transform-origin: center center;
     }
-
-    @keyframes spinLogo{
-      from{ transform: translateY(-50%) rotate(360deg); }
-      to{ transform: translateY(-50%) rotate(0deg); }
+    .hero-logo img,
+    .hero-logo .logo-glitch-layer{
+      display:block;
+      height:100%;
+      max-height:800px;
+      width:auto;
+      filter: drop-shadow(0 0 40px rgba(139,107,255,0.25));
+    }
+    .hero-logo .logo-glitch-layer{
+      position:absolute;
+      top:0; left:0;
+      pointer-events:none;
+      opacity:0;
+      mix-blend-mode:screen;
+      filter:none;
+    }
+    .hero-logo.is-glitching .layer-1{
+      opacity:0.85;
+      filter:saturate(4) hue-rotate(-30deg);
+      animation: glitchLayer1 0.35s steps(2) infinite;
+    }
+    .hero-logo.is-glitching .layer-2{
+      opacity:0.85;
+      filter:saturate(4) hue-rotate(160deg);
+      animation: glitchLayer2 0.35s steps(2) infinite;
     }
 
     @media (max-width:900px){
@@ -605,7 +671,11 @@ a, button, .card, .burger, nav a {
 
 <header>
   <a href="#" class="brand">
-    <img src="./img/BLANCK-ORIGINAL.png" alt="BLANCK.inc logo">
+    <span class="logo-glitch" id="headerLogoGlitch">
+      <img src="./img/BLANCK-ORIGINAL.png" alt="BLANCK.inc logo" class="logo-base">
+      <img src="./img/BLANCK-ORIGINAL.png" alt="" class="logo-glitch-layer layer-1" aria-hidden="true">
+      <img src="./img/BLANCK-ORIGINAL.png" alt="" class="logo-glitch-layer layer-2" aria-hidden="true">
+    </span>
     BLANCK<span>.inc</span>
   </a>
   <nav id="nav">
@@ -625,7 +695,11 @@ a, button, .card, .burger, nav a {
 
 
 <section class="hero">
-  <img src="./img/BLANCK-ORIGINAL.png" alt="" class="hero-logo">
+  <div class="hero-logo" id="heroLogoGlitch">
+    <img src="./img/BLANCK-ORIGINAL.png" alt="" class="logo-base">
+    <img src="./img/BLANCK-ORIGINAL.png" alt="" class="logo-glitch-layer layer-1" aria-hidden="true">
+    <img src="./img/BLANCK-ORIGINAL.png" alt="" class="logo-glitch-layer layer-2" aria-hidden="true">
+  </div>
   <div class="eyebrow mono">DISPONÍVEL PARA NOVOS PROJETOS</div>
   <h1><span class="glitch">Criação de sites</span><span class="line2">e identidade visual.</span></h1>
 
@@ -900,6 +974,18 @@ a, button, .card, .burger, nav a {
       });
     });
   }
+
+  // Glitch automático no logo giratório do hero
+  const heroLogoGlitch = document.getElementById('heroLogoGlitch');
+  function triggerLogoGlitch(){
+    heroLogoGlitch.classList.add('is-glitching');
+    setTimeout(() => heroLogoGlitch.classList.remove('is-glitching'), 300 + Math.random() * 250);
+  }
+  function scheduleLogoGlitch(){
+    const delay = 3500 + Math.random() * 4500; // entre 3.5s e 8s
+    setTimeout(() => { triggerLogoGlitch(); scheduleLogoGlitch(); }, delay);
+  }
+  scheduleLogoGlitch();
 </script>
 
 </body>
