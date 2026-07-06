@@ -578,6 +578,24 @@ a, button, .card, .burger, nav a {
     .lightbox-img-wrap img{ max-height:50vh; }
   }
 
+  .hero-scroll-link{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:36px;
+  font-size:0.85rem;
+  font-weight:600;
+  color: var(--accent2);
+  text-decoration:none;
+  border-bottom:1px solid transparent;
+  transition: border-color 0.2s ease, gap 0.2s ease;
+  position:relative;
+  z-index:1;
+}
+.hero-scroll-link svg{ transition: transform 0.2s ease; }
+.hero-scroll-link:hover{ border-color: var(--accent2); gap:12px; }
+.hero-scroll-link:hover svg{ transform: translateX(3px); }
+
 </style>
 </head>
 <body>
@@ -610,11 +628,18 @@ a, button, .card, .burger, nav a {
   <img src="./img/BLANCK-ORIGINAL.png" alt="" class="hero-logo">
   <div class="eyebrow mono">DISPONÍVEL PARA NOVOS PROJETOS</div>
   <h1><span class="glitch">Criação de sites</span><span class="line2">e identidade visual.</span></h1>
-  <div class="hero-sub">
-    <p>Projetos de desenvolvimento web e design gráfico feitos sob medida — do wireframe à publicação. Clique em qualquer card para ver o trabalho completo.</p>
-  </div>
-</section>
 
+  <div class="hero-sub">
+    <p>Sua marca merece mais do que um site — merece uma presença completa. Criamos sites, identidade visual e conteúdo para redes sociais sob medida para o seu negócio.</p>
+    <div class="hero-tags">
+      <span>Sites</span>
+      <span>Identidade Visual</span>
+      <span>Social Media</span>
+      <span>Divulgação</span>
+    </div>
+  </div>
+
+</section>
 
 <section class="section" id="sites">
   <div class="section-head">
